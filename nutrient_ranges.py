@@ -1,11 +1,14 @@
+"""
+# 'sedentary': 1.2,
+# 'lightly_active': 1.375,
+# 'moderately_active': 1.55,
+# 'very_active': 1.725,
+# 'extra_active': 1.9
+"""
+
 import numpy as np
 
 
-#'sedentary': 1.2,
-#'lightly_active': 1.375,
-#'moderately_active': 1.55,
-#'very_active': 1.725,
-#'extra_active': 1.9
 def calculate_calories(
     gender,
     current_weight,
@@ -54,7 +57,6 @@ def calculate_calories(
     else:
         calories_weight_loss = calories_current_maintenance - 500
 
-    weight_difference = goal_weight - current_weight
     excess_weight = current_weight - goal_weight
 
     max_excess_weight = 2
@@ -193,12 +195,6 @@ def get_sugar_range(kcal_recomendations):
 
 def get_vegetable_fruits_range():
     return np.array([400, 400, 800, 1000, 1200])
-
-
-def get_saturated_fat_range(kcal_recomendations):
-    return np.array(
-        [0, 0, 0, 0.05 * kcal_recomendations / 9, 0.1 * kcal_recomendations / 9]
-    )
 
 
 def update_vitamins_and_minerals(params, gender, breastfeeding):

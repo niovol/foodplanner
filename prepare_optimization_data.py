@@ -1,8 +1,4 @@
-import re
-
-import pandas as pd
-
-from data import compute_data_dict, load_json, save_json
+from data import load_json, save_json
 
 prices = load_json("prices_corrected.json")
 food_database = load_json("food_database.json")

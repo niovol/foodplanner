@@ -1,15 +1,9 @@
-import os
-import re
 import tkinter as tk
 from tkinter import filedialog, ttk
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
-import requests
-from bs4 import BeautifulSoup
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
 
 from AutocompleteWidget import AutocompleteEntry
 from data import compute_data_dict, load_json, save_json
