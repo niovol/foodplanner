@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
+
 class AutocompleteEntry(ttk.Entry):
     def __init__(self, autocomplete_list, disable_autocomplete=False, *args, **kwargs):
         self.var = tk.StringVar()
@@ -17,7 +18,9 @@ class AutocompleteEntry(ttk.Entry):
     def update_list(self, *args):
         if not self.toplevel:
             self.toplevel = tk.Toplevel(self)
-            self.toplevel.geometry(f"+{self.winfo_rootx()}+{self.winfo_rooty() + self.winfo_height()}")
+            self.toplevel.geometry(
+                f"+{self.winfo_rootx()}+{self.winfo_rooty() + self.winfo_height()}"
+            )
             self.toplevel.overrideredirect(True)
             self.toplevel.config(bg="white")
             self.listbox = tk.Listbox(self.toplevel, width=self["width"], bd=0)
@@ -27,7 +30,11 @@ class AutocompleteEntry(ttk.Entry):
         search_text = self.var.get()
         self.listbox.delete(0, tk.END)
 
-        filtered_autocomplete_list = [item for item in self.autocomplete_list if self.var.get().lower() in item.lower()]
+        filtered_autocomplete_list = [
+            item
+            for item in self.autocomplete_list
+            if self.var.get().lower() in item.lower()
+        ]
         for item in filtered_autocomplete_list:
             self.listbox.insert(tk.END, item)
 
