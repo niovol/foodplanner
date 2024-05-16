@@ -99,16 +99,17 @@ class DishWeightEntry(tk.Frame):
         self.weight_entry = tk.Entry(self, width=10)
         self.weight_entry.grid(row=0, column=1)
 
-        self.remove_button = tk.Button(self, text="X")
+        self.remove_button = tk.Button(
+            self, text="X", command=lambda: remove_callback(self)
+        )
         self.remove_button.grid(row=0, column=2)
-        self.remove_button.config(command=lambda: remove_callback(self))
 
 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        self.data = load_json("food_database.json")
+        self.data = load_json("C:/yd/food/code/food_database.json")
 
         self.title("Nutrient Ration Planner")
         self.geometry("1600x900")
@@ -121,6 +122,11 @@ class App(tk.Tk):
         self.right_frame = tk.Frame(self)
         self.right_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=5, pady=5)
 
+        self.create_widgets()
+        self.add_dish_field()
+        self.canvas = None
+
+    def create_widgets(self):
         self.save_physiological_params_button = tk.Button(
             self.left_frame,
             text="Save Physiological Params",
@@ -199,10 +205,6 @@ class App(tk.Tk):
         )
         self.plot_button.pack()
 
-        self.add_dish_field()
-
-        self.canvas = None
-
     def save_physiological_params(self):
         file_path = filedialog.asksaveasfilename(
             defaultextension=".json",
@@ -242,7 +244,7 @@ class App(tk.Tk):
         if self.canvas:
             self.canvas.get_tk_widget().pack_forget()
 
-        self.canvas = FigureCanvasTkAgg(fig, master=self)
+        self.canvas = FigureCanvasTkAgg(fig, master=self.right_frame)
         self.canvas.draw()
         self.canvas.get_tk_widget().pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
 
@@ -278,7 +280,6 @@ class App(tk.Tk):
             return
 
         ration_dict = load_json(file_path)
-
         self.remove_all_dish_fields()
 
         for dish, weight in ration_dict["Рацион"].items():
@@ -335,14 +336,15 @@ class App(tk.Tk):
         nutrient_ranges = calculate_nutrient_ranges(
             gender, height, weight, age, activity_multiplier, breastfeeding
         )
-
         ration_dict = self.get_current_ration_dict()
         nutrients_total = compute_data_dict(ration_dict, self.data)["Рацион"][
             "nutrients_total"
         ]
+
         fig = plot_ration_nutrients(nutrient_ranges, nutrients_total, title=None)
         self.draw_plot(fig)
 
 
-app = App()
-app.mainloop()
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()

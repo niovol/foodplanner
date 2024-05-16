@@ -21,25 +21,28 @@ def compute_data_dict(compounds, data):
             "nutrients_in_100g": {},
             "nutrients_total": {},
         }
-        for item in composition:
-            new_data[name]["weight"] += composition[item]
+        for item, weight in composition.items():
+            new_data[name]["weight"] += weight
             if item in data:
+                item_data = data[item]
                 new_data[name]["price"]["item"] += (
-                    data[item]["price"]["100g"] / 100 * composition[item]
+                    item_data["price"]["100g"] / 100 * weight
                 )
-                for nutrient, amount in data[item]["nutrients_in_100g"].items():
+                for nutrient, amount in item_data["nutrients_in_100g"].items():
                     if nutrient not in new_data[name]["nutrients_total"]:
                         new_data[name]["nutrients_total"][nutrient] = 0
-                    new_data[name]["nutrients_total"][nutrient] += (
-                        amount / 100 * composition[item]
-                    )
-        weight = new_data[name]["weight"]
-        price = new_data[name]["price"]
-        for nutrient, amount in new_data[name]["nutrients_total"].items():
-            new_data[name]["nutrients_in_100g"][nutrient] = round(
-                amount / weight * 100, 2
-            )
-            new_data[name]["nutrients_total"][nutrient] = round(amount, 2)
-        price["kg"] = round(price["item"] / weight * 1000, 2)
-        price["100g"] = round(price["item"] / weight * 100, 2)
+                    new_data[name]["nutrients_total"][nutrient] += amount / 100 * weight
+
+        new_data[name] = _calculate_nutrient_ratios(new_data[name])
     return new_data
+
+
+def _calculate_nutrient_ratios(dish_data):
+    weight = dish_data["weight"]
+    price = dish_data["price"]
+    for nutrient, amount in dish_data["nutrients_total"].items():
+        dish_data["nutrients_in_100g"][nutrient] = round(amount / weight * 100, 2)
+        dish_data["nutrients_total"][nutrient] = round(amount, 2)
+    price["kg"] = round(price["item"] / weight * 1000, 2)
+    price["100g"] = round(price["item"] / weight * 100, 2)
+    return dish_data
